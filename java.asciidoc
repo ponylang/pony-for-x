@@ -1,0 +1,209 @@
+= Pony for Java
+
+== What is Pony
+
+Pony is an open-source language whose development started around 2012 at Imperial College in London. It was designed to address the future world of software development where multicore and distributed applications are the norm, and correct concurrent execution is no longer optional.
+
+== What we like about java
+
+As Java developers, we love Java's simple design and aproachable syntax. It provides us with a clean object-oriented model, with strong static typing and generics for type-safe collections. Java's concurrency constructs give us strong building blocks for writing safe concurrent programs by carefully leveraging the libraries and idioms.
+
+Java also comes with a broad standard library that has provided a foundation for the community to build a rich ecosystem of libraries that cover
+
+One of Java's best features is the strength of its tools, which are especially powerful. This is due to the simplicity of parsing and type resolution of Java source that allows tools of all kinds to easily assist developers in reading, writing and refactoring code.
+
+Java also does a great job in providing performance and portability. With the quick javac compiler that produces portable bytecode, and the very fast hotspot VM that runs on many platforms.
+
+== Why we like Pony
+
+Pony has a number of attributes that are similar to Java's, and in most cases a bit better too. Some of these are:
+
+ * Pony is also simple and approachable, with a clean and concise syntax that is a bit like a sweet mix of Python, Ruby and Scala.
+ * Pony is also object oriented, plus some functional elements that are a bit like Scala.
+ * Pony is also strongly and statically typed, plus its type system is more powerful and less constricting, with features like algebraic types and traits.
+ * Pony's concurrency model is another strong point, using actors with asynchronous behaviours that safetly encapsualte all concurrent operations.
+ * Pony's ponyc compiler is very fast, and compiles to native code using the llvm backend which allows it to target just as many platforms.
+
+Pony also has some very unique attributes that give it even more things to like:
+
+ * Pony has reference capabilities, which along with actors, provide guaranteed safe concurrency with deadlock free and race free memory access.
+
+There are a few areas where Pony shows its youth, but are in active development and evolving rapidly.
+
+  * The libraries are still young and limited to just the basics.
+  * The tooling is primitive and currently limited to compilation, test execution and doc generation.
+
+
+== Learning by Example
+
+Let's get to know Pony a little better by walking through and comparing some examples written in both Java and Pony.
+
+=== The Ubiquitous Hello World Program
+
+We'll begin by comparing the ubiquitous HelloWorld program in both languages.
+
+Here's a minimal example in Java:
+
+.helloworld/HelloWorld.java
+[source,java]
+----
+public class HelloWorld {
+   public static void main(String[] args) {
+      System.out.println("Hello, World");
+   }
+}
+----
+In Java, the source file name must match the public class name, and the public static main method is the program's entry point. Java implicitly imports the 'java.lang' package which defines a bunch of core language types and constants. And, the class' package name can be ommited in small programs.
+
+This program then prints its output to stdout through the static global 'System.out' stream.
+
+To run the program, execute these commands in the helloworld directory:
+[source,shell]
+----
+$ javac HelloWorld.java
+$ java HelloWorld
+----
+The `javac` command compiles the source into HelloWorld.class, and then `java` command runs that class by name.
+
+Now for the pony version:
+
+.helloworld/main.pony
+[source,ruby]
+----
+actor Main
+    new create(env: Env) =>
+        env.out.print("Hello, Pony world!")
+----
+In Pony, the source file name can be anything, and can contain as many classes and actors as the programmer likes. But the containing directory name defines the package and hence the executable name, so in our example we want that to be 'helloworld'. Pony implicitly imports a core package called 'builtin' which is similar to Java's 'java.lang'.
+
+Pony has a special kind of class called an 'actor' which works like a regular class but also defines the unit of concurrency. Think of it like a class running in its own (lightweight) thread. The main entrypoint of a program is always in its own Main actor.
+
+@TODO: mention how constructors use 'new' and are a kind of method. And how the '=>' syntac works.
+
+Since Pony has no global variables, programs need to get their environment for context through as an argument in this initial actor's constructor. This Env object provides access to all the things that a process gets from the operating system, such as arguments and the stdio file handles.
+
+The helloworld program then prints its output to the stdout stream in the supplied env's out field.
+
+To run the program, execute these commands in the helloworld directory:
+[source,shell]
+----
+$ ponyc .
+$ ./helloworld
+----
+The `ponyc` command compiles the Pony source in the given directory into a native binary which is self-contained and can be run directly. You'll see how small this complete binary is and fast it starts and runs. And, it is self-contained, needing no additional runtime installed.
+
+
+=== Let's Add a Little Math
+
+In this next example, lets look at a program with a couple of classes, with methods, variables and loops.
+
+@TODO: maybe this example could use printf in both languages to control the output format.
+
+Here is the Java version (34 lines)
+.measurements/Measurements.java
+[source,java]
+----
+public class Measurements {
+    public static void main(String[] args) {
+        for (int i = 1; i <= 4; i++) {
+            Rectangle r = new Rectangle(i, i + 2);
+            String s = "Width and height: " + r.dimensions() +
+                "\nCircumference: " + r.circumference() +
+                "\nArea: " + r.area() + "\n";
+            System.out.println(s);
+        }
+    }
+}
+
+class Rectangle {
+    private final float width;
+    private final float height;
+
+    public Rectangle(float width, float height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public String dimensions() {
+        return width + " " + height;
+    }
+
+    public float circumference() {
+        return 2 * (width + height);
+    }
+
+    public float area() {
+        return width * height;
+    }
+}
+----
+@TODO: point out the loop, the class creation and method invocation. Mention the implicit String conversion of the numbers. In the Rectangle class, point out the private final fields, and how the constructor initializes them.
+
+To run the program, execute these commands in the measurements directory:
+[source,shell]
+----
+$ javac Measurements.java
+$ java Measurements
+----
+
+And the Pony version (26 lines)
+
+.measurements/main.pony
+[source,ruby]
+----
+use "collections"
+
+actor Main
+  new create(env: Env) =>
+    for i in Range[F32](1, 5) do
+        let r = Rectangle(i, i + 2)
+        let s = "Width and height: " + r.dimensions() +
+            "\nCircumference: " + r.circumference().string() +
+            "\nArea: " + r.area().string() + "\n"
+      env.out.print(s)
+    end
+
+class Rectangle
+  let _width: F32
+  let _height: F32
+
+  new create(width: F32, height: F32) =>
+    _width = width
+    _height = height
+
+  fun dimensions(): String => _width.string() + " " + _height.string()
+
+  fun circumference(): F32 => 2 * (_width + _height)
+
+  fun area(): F32 => _width * _height
+----
+@TODO: explain the for loop construct and how Range fits in. (why isn't Range in builtin btw?). Since there are no implicit conversions in Pony, the string() method must be used to stringify the numeric results.
+
+@TODO: In the Rectangle class, point out that the fields are also private due to the leading underscore and are final due to the let. And how the constructor initializes them like Java.
+
+To run the program, execute these commands in the measurements directory:
+[source,shell]
+----
+$ ponyc main.pony
+$ ./measurements
+----
+
+=== Let's Try Some Concurrency
+
+@TODO: Showcase actors and their behaviours here.
+
+Here is the Java version (32 lines)
+
+.concurrency/Concurrency.java
+[source,java]
+----
+----
+
+.concurrency/main.pony
+[source,pony]
+----
+----
+
+== When would I use Pony instead of Java?
+
+@TODO discuss limitations of Java and strengths of Pony
