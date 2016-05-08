@@ -28,9 +28,7 @@ After the title, before diving into your first section, you should have some
 level of expository text that explains what the reader can expect to get out of
 reading the page.
 
-Please make sure to keep any individual line under 80 characters except in
-instance where that would break link with the AsciiDoc (which only happens if
-the linked text and url are more than 76 characters).
+Avoid hard-wrapping lines within paragraphs (using line breaks in the middle of or between sentences to make lines shorter than a certain length). Instead, turn on soft-wrapping in your editor and expect the documentation renderer to let the text flow to the width of the container.
 
 ## How to update the Table of Contents
 
