@@ -3,19 +3,18 @@ public class Measurements {
     public static void main(String[] args) {
         for (int i = 1; i <= 4; i++) {
             Rectangle r = new Rectangle(i, i + 2);
-            String s = "Width and height: " + r.dimensions() +
-                "\nCircumference: " + r.circumference() +
-                "\nArea: " + r.area() + "\n";
-            System.out.println(s);
+            System.out.printf(
+                "Width and height: %s\nCircumference: %d\nArea: %d\n\n",
+                r.dimensions(), r.circumference(), r.area());
         }
     }
 }
 
 class Rectangle {
-    private final float width;
-    private final float height;
+    private final int width;
+    private final int height;
 
-    public Rectangle(float width, float height) {
+    public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -24,11 +23,11 @@ class Rectangle {
         return width + " " + height;
     }
 
-    public float circumference() {
+    public int circumference() {
         return 2 * (width + height);
     }
 
-    public float area() {
+    public int area() {
         return width * height;
     }
 }
