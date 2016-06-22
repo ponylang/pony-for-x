@@ -263,17 +263,21 @@ $ ./functional
 
 === Typing
 
+////
 @TODO mention Interfaces and Traits and how they work. Although, the tutorial has a nice and simple explanation so maybe lean on that.
 
 Pony Traits are like Java Interfaces (and Scala Traits): Nominal
 Pony Interfaces are like Golang Interfaces: Structural
 
 @TODO mention Primitives, which are a weird new thing that can be like enums, or like Scala Objects.
+////
 
 
 === Let's Try Some Concurrency
 
+////
 @TODO: Showcase actors and their behaviors here.
+////
 
 Here is the Java version
 
@@ -289,4 +293,6 @@ Here is the Java version
 
 == When would I use Pony instead of Java?
 
+////
 @TODO discuss limitations of Java and strengths of Pony
+////
