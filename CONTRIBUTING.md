@@ -19,9 +19,9 @@ working on a chapter for a language that someone else was already working on.
 ## How to format a chapter
 
 Each chapter should start with the title of the chapter as a level one header:
-`==` in AsciiDoc. Each section of the page should appear as a second level
-heading: `===`. If you need to have any subsections, make them a third level
-heading: `====`. If you find yourself reaching for a forth level heading, stop
+`=` in AsciiDoc. Each section of the page should appear as a second level
+heading: `==`. If you need to have any subsections, make them a third level
+heading: `===`. If you find yourself reaching for a forth level heading, stop
 and figure out a different way to present the info in that section.
 
 After the title, before diving into your first section, you should have some
